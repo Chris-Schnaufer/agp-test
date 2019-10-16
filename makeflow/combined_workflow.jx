@@ -1,0 +1,54 @@
+{
+  "rules": [
+    {
+      "environment": {
+        "RAW_DATA_DIRECTORY": RAW_DATA_DIRECTORY
+      },
+      "command": "mkdir -p ${RAW_DATA_DIRECTORY}",
+      "inputs": [],
+      "outputs": [
+        RAW_DATA_DIRECTORY
+      ]
+    },
+    {
+      "environment": {
+        "RAW_DATA_DIRECTORY": RAW_DATA_DIRECTORY,
+        "CAPTURE_RAW_DATA_FILENAME": CAPTURE_RAW_DATA_FILENAME,
+        "CAPTURE_RAW_DATA_URL": CAPTURE_RAW_DATA_URL
+      },
+      "command": "cd ${RAW_DATA_DIRECTORY}; wget -O ${CAPTURE_RAW_DATA_FILENAME} ${CAPTURE_RAW_DATA_URL}",
+      "inputs": [
+        RAW_DATA_DIRECTORY
+      ],
+      "outputs": [
+        RAW_DATA_DIRECTORY + "/" + CAPTURE_RAW_DATA_FILENAME
+      ]
+    },
+    {
+      "environment": {
+        "RAW_DATA_DIRECTORY": RAW_DATA_DIRECTORY,
+        "CAPTURE_RAW_DATA_FILENAME": CAPTURE_RAW_DATA_FILENAME
+      },
+      "command": "cd ${RAW_DATA_DIRECTORY}; unzip ${CAPTURE_RAW_DATA_FILENAME}",
+      "inputs": [
+        RAW_DATA_DIRECTORY + "/" + CAPTURE_RAW_DATA_FILENAME
+      ],
+      "outputs": [
+        RAW_DATA_DIRECTORY + "/" + CAPTURE_RAW_DATA_METADATA
+      ]
+    },
+    {
+      "environment": {
+        "BETYDB_URL": BETYDB_URL,
+        "BETYDB_KEY": BETYDB_KEY,
+        "INPUT_FILE": RAW_DATA_DIRECTORY + "/" + CAPTURE_RAW_DATA_METADATA,
+        "OUTPUT_DIR": RAW_DATA_DIRECTORY
+      },
+      "command": "mkdir -p ${OUTPUT_DIR} && docker run --rm -e BETYDB_URL=${BETYDB_URL} -e BETYDB_KEY=${BETYDB_KEY} -v $(pwd):/mnt -w /mnt chrisatua/agpipeline:metadata-cleaner stereoTop ${INPUT_FILE} ${OUTPUT_DIR}",
+      "inputs": [RAW_DATA_DIRECTORY + "/" + CAPTURE_RAW_DATA_METADATA],
+      "outputs": [
+        RAW_DATA_DIRECTORY + "/" + CAPTURE_CLEAN_METADATA
+      ]
+    }
+  ]
+}
