@@ -42,6 +42,7 @@ RUN apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
 COPY terraref/ /home/extractor/terraref/
+COPY sensors /home/extractor/sensors
 COPY terrautils/ /home/extractor/terrautils/
 
 COPY *.py /home/extractor/

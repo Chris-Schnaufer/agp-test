@@ -15,6 +15,9 @@ from terrautils.metadata import get_terraref_metadata as do_get_terraref_metadat
 from terrautils.spatial import geojson_to_tuples as do_geojson_to_tuples
 from terrautils.sensors import Sensors
 import terraref.stereo_rgb
+import terrautils.lemnatec
+
+terrautils.lemnatec.SENSOR_METADATA_CACHE = os.path.dirname(os.path.realpath(__file__))
 
 SELF_DESCRIPTION = "Maricopa agricultural gantry bin to geotiff converter"
 
@@ -93,7 +96,11 @@ def bin2tif(filename: str, metadata: str, working_space: str) -> dict:
         result['code'] = -1
         return result
 
-    terra_md_full = do_get_terraref_metadata(loaded_json, EXTRACTOR_NAME)
+    if 'content' in loaded_json:
+        parse_json = loaded_json['content']
+    else:
+        parse_json = loaded_json
+    terra_md_full = do_get_terraref_metadata(parse_json, EXTRACTOR_NAME)
     if not terra_md_full:
         msg = "Unable to find %s metadata in JSON file '%s'" % (EXTRACTOR_NAME, metadata)
         logging.error(msg)
@@ -124,7 +131,7 @@ def bin2tif(filename: str, metadata: str, working_space: str) -> dict:
 #                                              timestamp[:4], timestamp[5:7], timestamp[8:10],
 #                                              leaf_ds_name=self.sensors.get_display_name() + ' - ' + timestamp)
 
-    sensor = Sensors(base='', station='', sensor='rgb_geotiff')
+    sensor = Sensors(base='', station='ua-mac', sensor='rgb_geotiff')
     leaf_name = sensor.get_display_name()
 
     bin_type = 'left' if filename.endswith('_left.bin') else 'right' if filename.endswith('_right.bin') else None
@@ -136,7 +143,7 @@ def bin2tif(filename: str, metadata: str, working_space: str) -> dict:
         result['code'] = -4
         return result
 
-    terra_md_trim = do_get_terraref_metadata(loaded_json)
+    terra_md_trim = do_get_terraref_metadata(parse_json)
     if updated_experiment is not None:
         terra_md_trim['experiment_metadata'] = updated_experiment
     terra_md_trim['raw_data_source'] = filename
@@ -165,7 +172,7 @@ def bin2tif(filename: str, metadata: str, working_space: str) -> dict:
     }
 
     # Perform actual processing
-    new_image = terraref.stereo_rgb.process_raw(bin_shape, tiff_path, None)
+    new_image = terraref.stereo_rgb.process_raw(bin_shape, filename, None)
     do_create_geotiff(new_image, gps_bounds_bin, tiff_path, None, True,
                       extractor_info, terra_md_full, compress=True)
 
