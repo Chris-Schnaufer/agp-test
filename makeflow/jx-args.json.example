@@ -1,6 +1,6 @@
 {
   "CAPTURE_RAW_DATA_URL": "https://de.cyverse.org/dl/d/00F871F7-800D-4E84-B1C0-3B15BB9DB2F4/stereoTop-2018-05-07__16-58-55-097.zip",
-  "CAPTURE_RAW_DATA_FILENAME": "stereoTop.zip",
+  "CAPTURE_RAW_DATA_FILENAME": "stereoTop-2018-05-07__16-58-55-097.zip",
   "CAPTURE_RAW_DATA_METADATA": "42a0833c-a6e4-4cf1-b784-b288b7580d64_metadata.json",
   "CAPTURE_CLEAN_METADATA": "42a0833c-a6e4-4cf1-b784-b288b7580d64_metadata_cleaned.json",
   "RAW_DATA_DIRECTORY": "./raw_data/",
