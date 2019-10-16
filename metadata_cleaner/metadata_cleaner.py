@@ -9,6 +9,9 @@ import logging
 from pyclowder.utils import setup_logging as do_setup_logging
 from terrautils.extractors import load_json_file as do_load_json_file
 from terrautils.metadata import clean_metadata as do_clean_metadata
+import terrautils.lemnatec
+
+terrautils.lemnatec.SENSOR_METADATA_CACHE = os.path.dirname(os.path.realpath(__file__))
 
 SELF_DESCRIPTION = "Maricopa agricultural gantry metadata cleaner"
 
@@ -125,7 +128,8 @@ def clean_metadata(sensor: str, filename: str, working_space: str, userid: str =
     logging.debug("Cleaned metadata '%s'", str(format_md))
 
     with open(new_path, 'w') as out_file:
-        json.dump(format_md, out_file, indent=2)
+        logging.warning("HACK: format_md: %s", format_md)
+        json.dump(format_md, out_file, indent=2, skipkeys=True)
 
     result['file'] = [{
         'path': new_path,
@@ -174,7 +178,9 @@ def do_work(parser) -> None:
 
 if __name__ == "__main__":
     try:
-        PARSER = argparse.ArgumentParser(description=SELF_DESCRIPTION)
+        PARSER = argparse.ArgumentParser(description=SELF_DESCRIPTION, 
+                                         epilog="The cleaned metadata is written to the working space, and " +
+                                         "the results are written off the working space in 'output/result.json'")
         do_work(PARSER)
     except Exception as ex:
         logging.error("Top level exception handler caught an exception: %s", str(ex))
