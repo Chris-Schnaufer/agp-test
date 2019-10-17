@@ -128,7 +128,6 @@ def clean_metadata(sensor: str, filename: str, working_space: str, userid: str =
     logging.debug("Cleaned metadata '%s'", str(format_md))
 
     with open(new_path, 'w') as out_file:
-        logging.warning("HACK: format_md: %s", format_md)
         json.dump(format_md, out_file, indent=2, skipkeys=True)
 
     result['file'] = [{

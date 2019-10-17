@@ -208,6 +208,8 @@ def bin2tif(filename: str, metadata: str, working_space: str) -> dict:
 
 def do_work(parser) -> None:
     """Function to prepare and execute work unit
+    Arguments:
+        parser: an instance of argparse.ArgumentParser
     """
     parser.add_argument('--logging', '-l', nargs='?', default=os.getenv("LOGGING"),
                         help='file or url or logging configuration (default=None)')
