@@ -8,23 +8,25 @@
   },
   "rules": [
     {
+      # Make directory to download archive file into,
+      "command": "mkdir -p ${ARCHIVE_DIR}",
       "environment": {
         "ARCHIVE_DIR": ARCHIVE_DIR
       },
-      "command": "mkdir -p ${ARCHIVE_DIR}",
       "inputs": [],
       "outputs": [
         ARCHIVE_DIR
       ]
     },
     {
+      # Download archive file
+      "command": "wget -O ${ARCHIVE_FILE_PATH} ${ARCHIVE_URL}",
       "environment": {
         "ARCHIVE_DIR": ARCHIVE_DIR,
         "ARCHIVE_FILE": ARCHIVE_FILE,
         "ARCHIVE_URL": ARCHIVE_URL,
         "ARCHIVE_FILE_PATH": ARCHIVE_FILE_PATH
       },
-      "command": "wget -O ${ARCHIVE_FILE_PATH} ${ARCHIVE_URL}",
       "inputs": [
         ARCHIVE_DIR
       ],
@@ -33,11 +35,12 @@
       ]
     },
     {
+      # Extract the archive
+      "command": "unzip ${ARCHIVE_FILE_PATH} -d ${ARCHIVE_DIR}",
       "environment": {
         "ARCHIVE_DIR": ARCHIVE_DIR,
         "ARCHIVE_FILE_PATH": ARCHIVE_FILE_PATH
       },
-      "command": "unzip ${ARCHIVE_FILE_PATH} -d ${ARCHIVE_DIR}",
       "inputs": [
         ARCHIVE_DIR,
         ARCHIVE_FILE_PATH
@@ -49,13 +52,14 @@
       ]
     },
     {
+      # Make a cleaned copy of the metadata
+      "command": "mkdir -p ${CLEANED_META_DIR} && docker run --rm -e BETYDB_URL=${BETYDB_URL} -e BETYDB_KEY=${BETYDB_KEY} -v $(pwd):/mnt -w /mnt chrisatua/agpipeline:metadata-cleaner stereoTop ${METADATA} ${CLEANED_META_DIR}",
       "environment": {
         "BETYDB_URL": BETYDB_URL,
         "BETYDB_KEY": BETYDB_KEY,
         "METADATA": METADATA,
         "CLEANED_META_DIR": CLEANED_META_DIR
       },
-      "command": "mkdir -p ${CLEANED_META_DIR} && docker run --rm -e BETYDB_URL=${BETYDB_URL} -e BETYDB_KEY=${BETYDB_KEY} -v $(pwd):/mnt -w /mnt chrisatua/agpipeline:metadata-cleaner stereoTop ${METADATA} ${CLEANED_META_DIR}",
       "inputs": [METADATA],
       "outputs": [
         CLEANED_META_DIR,
