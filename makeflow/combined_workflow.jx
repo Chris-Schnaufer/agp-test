@@ -1,53 +1,65 @@
 {
+  "define": {
+    "ARCHIVE_FILE_PATH": ARCHIVE_DIR + ARCHIVE_FILE,
+    "METADATA": ARCHIVE_DIR + UUID + "_metadata.json",
+    "LEFT_BIN": ARCHIVE_DIR + UUID + "_left.bin",
+    "RIGHT_BIN": ARCHIVE_DIR + UUID + "_right.bin",
+    "METADATA_CLEANED": CLEANED_META_DIR + UUID + "_metadata_cleaned.json"
+  },
   "rules": [
     {
       "environment": {
-        "RAW_DATA_DIRECTORY": RAW_DATA_DIRECTORY
+        "ARCHIVE_DIR": ARCHIVE_DIR
       },
-      "command": "mkdir -p ${RAW_DATA_DIRECTORY}",
+      "command": "mkdir -p ${ARCHIVE_DIR}",
       "inputs": [],
       "outputs": [
-        RAW_DATA_DIRECTORY
+        ARCHIVE_DIR
       ]
     },
     {
       "environment": {
-        "RAW_DATA_DIRECTORY": RAW_DATA_DIRECTORY,
-        "CAPTURE_RAW_DATA_FILENAME": CAPTURE_RAW_DATA_FILENAME,
-        "CAPTURE_RAW_DATA_URL": CAPTURE_RAW_DATA_URL
+        "ARCHIVE_DIR": ARCHIVE_DIR,
+        "ARCHIVE_FILE": ARCHIVE_FILE,
+        "ARCHIVE_URL": ARCHIVE_URL,
+        "ARCHIVE_FILE_PATH": ARCHIVE_FILE_PATH
       },
-      "command": "cd ${RAW_DATA_DIRECTORY}; wget -O ${CAPTURE_RAW_DATA_FILENAME} ${CAPTURE_RAW_DATA_URL}",
+      "command": "wget -O ${ARCHIVE_FILE_PATH} ${ARCHIVE_URL}",
       "inputs": [
-        RAW_DATA_DIRECTORY
+        ARCHIVE_DIR
       ],
       "outputs": [
-        RAW_DATA_DIRECTORY + "/" + CAPTURE_RAW_DATA_FILENAME
+        ARCHIVE_FILE_PATH
       ]
     },
     {
       "environment": {
-        "RAW_DATA_DIRECTORY": RAW_DATA_DIRECTORY,
-        "CAPTURE_RAW_DATA_FILENAME": CAPTURE_RAW_DATA_FILENAME
+        "ARCHIVE_DIR": ARCHIVE_DIR,
+        "ARCHIVE_FILE_PATH": ARCHIVE_FILE_PATH
       },
-      "command": "cd ${RAW_DATA_DIRECTORY}; unzip ${CAPTURE_RAW_DATA_FILENAME}",
+      "command": "unzip ${ARCHIVE_FILE_PATH} -d ${ARCHIVE_DIR}",
       "inputs": [
-        RAW_DATA_DIRECTORY + "/" + CAPTURE_RAW_DATA_FILENAME
+        ARCHIVE_DIR,
+        ARCHIVE_FILE_PATH
       ],
       "outputs": [
-        RAW_DATA_DIRECTORY + "/" + CAPTURE_RAW_DATA_METADATA
+        METADATA,
+        LEFT_BIN,
+        RIGHT_BIN
       ]
     },
     {
       "environment": {
         "BETYDB_URL": BETYDB_URL,
         "BETYDB_KEY": BETYDB_KEY,
-        "INPUT_FILE": RAW_DATA_DIRECTORY + "/" + CAPTURE_RAW_DATA_METADATA,
-        "OUTPUT_DIR": RAW_DATA_DIRECTORY
+        "METADATA": METADATA,
+        "CLEANED_META_DIR": CLEANED_META_DIR
       },
-      "command": "mkdir -p ${OUTPUT_DIR} && docker run --rm -e BETYDB_URL=${BETYDB_URL} -e BETYDB_KEY=${BETYDB_KEY} -v $(pwd):/mnt -w /mnt chrisatua/agpipeline:metadata-cleaner stereoTop ${INPUT_FILE} ${OUTPUT_DIR}",
-      "inputs": [RAW_DATA_DIRECTORY + "/" + CAPTURE_RAW_DATA_METADATA],
+      "command": "mkdir -p ${CLEANED_META_DIR} && docker run --rm -e BETYDB_URL=${BETYDB_URL} -e BETYDB_KEY=${BETYDB_KEY} -v $(pwd):/mnt -w /mnt chrisatua/agpipeline:metadata-cleaner stereoTop ${METADATA} ${CLEANED_META_DIR}",
+      "inputs": [METADATA],
       "outputs": [
-        RAW_DATA_DIRECTORY + "/" + CAPTURE_CLEAN_METADATA
+        CLEANED_META_DIR,
+        METADATA_CLEANED
       ]
     }
   ]
