@@ -4,11 +4,13 @@
     "METADATA": ARCHIVE_DIR + UUID + "_metadata.json",
     "LEFT_BIN": ARCHIVE_DIR + UUID + "_left.bin",
     "RIGHT_BIN": ARCHIVE_DIR + UUID + "_right.bin",
-    "METADATA_CLEANED": CLEANED_META_DIR + UUID + "_metadata_cleaned.json"
+    "METADATA_CLEANED": CLEANED_META_DIR + UUID + "_metadata_cleaned.json",
+    "LEFT_TIF": TIFS_DIR + UUID + "_left.tif",
+    "RIGHT_TIF": TIFS_DIR + UUID + "_right.tif",
   },
   "rules": [
     {
-      # Make directory to download archive file into,
+      # Make directory to download archive file into
       "command": "mkdir -p ${ARCHIVE_DIR}",
       "environment": {
         "ARCHIVE_DIR": ARCHIVE_DIR
@@ -65,6 +67,35 @@
         CLEANED_META_DIR,
         METADATA_CLEANED
       ]
-    }
+    },
+    {
+      # Make directory to store TIFF files
+      "command": "mkdir -p ${TIFS_DIR}",
+      "environment": {
+        "TIFS_DIR": TIFS_DIR
+      },
+      "inputs": [],
+      "outputs": [
+        TIFS_DIR
+      ]
+    },
+    {
+      # Convert bin/RGB images to TIFF format
+      "command": "docker run --rm -v $(pwd):/mnt -w /mnt chrisatua/agpipeline:rgb2tif ${BIN_FILE} ${METADATA_FILE} ${WORKING_SPACE}",
+      "environment": {
+        "BIN_FILE": BIN_TIF_PAIR[0],
+        "METADATA_FILE": METADATA_CLEANED,
+        "WORKING_SPACE": TIFS_DIR
+    },
+      "inputs": [
+        TIFS_DIR,
+        METADATA_CLEANED,
+        BIN_TIF_PAIR[0]
+      ],
+      "outputs": [
+        BIN_TIF_PAIR[1],
+        BIN_TIF_PAIR[1] + ".aux.xml"
+      ]
+    } for BIN_TIF_PAIR in [[LEFT_BIN, LEFT_TIF], [RIGHT_BIN, RIGHT_TIF]]
   ]
 }
