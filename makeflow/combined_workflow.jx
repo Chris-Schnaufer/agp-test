@@ -55,12 +55,12 @@
     },
     {
       # Make a cleaned copy of the metadata
-      "command": "mkdir -p ${WORKING_SPACE} && docker run --rm -e BETYDB_URL=${BETYDB_URL} -e BETYDB_KEY=${BETYDB_KEY} -v $(pwd):/mnt -w /mnt chrisatua/agpipeline:metadata-cleaner ${SENSOR} ${FILENAME} ${WORKING_SPACE} ${USERID}",
+      "command": "mkdir -p ${WORKING_SPACE} && docker run --rm -e BETYDB_URL=${BETYDB_URL} -e BETYDB_KEY=${BETYDB_KEY} -v $(pwd):/mnt -w /mnt agpipeline/cleanmetadata:latest --metadata ${METADATA} --working_space ${WORKING_SPACE} ${SENSOR} ${USERID}",
       "environment": {
         "BETYDB_URL": BETYDB_URL,
         "BETYDB_KEY": BETYDB_KEY,
         "SENSOR": "stereoTop",
-        "FILENAME": METADATA,
+        "METADATA": METADATA,
         "WORKING_SPACE": CLEANED_META_DIR,
         "USERID": ""
       },
