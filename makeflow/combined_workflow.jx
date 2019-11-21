@@ -38,7 +38,7 @@
     },
     {
       # Extract the archive
-      "command": "unzip ${ARCHIVE_FILE_PATH} -d ${ARCHIVE_DIR}",
+      "command": "unzip -o ${ARCHIVE_FILE_PATH} -d ${ARCHIVE_DIR}",
       "environment": {
         "ARCHIVE_DIR": ARCHIVE_DIR,
         "ARCHIVE_FILE_PATH": ARCHIVE_FILE_PATH
@@ -82,22 +82,38 @@
       ]
     },
     {
-      # Convert bin/RGB images to TIFF format
-      "command": "docker run --rm -v $(pwd):/mnt -w /mnt chrisatua/agpipeline:rgb2tif ${BIN_FILE} ${METADATA_FILE} ${WORKING_SPACE}",
+      # Convert LEFT bin/RGB image to TIFF format
+      "command": "docker run --rm -v $(pwd):/mnt -w /mnt agpipeline/bin2tif:latest --result print --metadata ${METADATA} --working_space ${WORKING_SPACE} ${LEFT_BIN}",
       "environment": {
-        "BIN_FILE": BIN_TIF_PAIR[0],
-        "METADATA_FILE": METADATA_CLEANED,
+        "LEFT_BIN": LEFT_BIN,
+        "METADATA": METADATA_CLEANED,
         "WORKING_SPACE": TIFS_DIR
     },
       "inputs": [
         TIFS_DIR,
-        METADATA_CLEANED,
-        BIN_TIF_PAIR[0]
+        LEFT_BIN,
+        METADATA_CLEANED
       ],
       "outputs": [
-        BIN_TIF_PAIR[1],
-        BIN_TIF_PAIR[1] + ".aux.xml"
+        LEFT_TIF
       ]
-    } for BIN_TIF_PAIR in [[LEFT_BIN, LEFT_TIF], [RIGHT_BIN, RIGHT_TIF]]
+    },
+    {
+      # Convert RIGHT bin/RGB image to TIFF format
+      "command": "docker run --rm -v $(pwd):/mnt -w /mnt agpipeline/bin2tif:latest --result print --metadata ${METADATA} --working_space ${WORKING_SPACE} ${RIGHT_BIN}",
+      "environment": {
+        "RIGHT_BIN": RIGHT_BIN,
+        "METADATA": METADATA_CLEANED,
+        "WORKING_SPACE": TIFS_DIR
+    },
+      "inputs": [
+        TIFS_DIR,
+        RIGHT_BIN,
+        METADATA_CLEANED
+      ],
+      "outputs": [
+        RIGHT_TIF
+      ]
+    }
   ]
 }
