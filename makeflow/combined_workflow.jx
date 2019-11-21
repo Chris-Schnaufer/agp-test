@@ -8,7 +8,8 @@
     "LEFT_TIF": TIFS_DIR + UUID + "_left.tif",
     "RIGHT_TIF": TIFS_DIR + UUID + "_right.tif",
     "LEFT_SOILMASK": SOILMASK_DIR + UUID + "_left_mask.tif",
-    "RIGHT_SOILMASK": SOILMASK_DIR + UUID + "_right_mask.tif"
+    "RIGHT_SOILMASK": SOILMASK_DIR + UUID + "_right_mask.tif",
+    "MOSAIC_LIST_FILE": FIELDMOSAIC_DIR + "filelist.txt"
   },
   "rules": [
     {
@@ -160,6 +161,34 @@
       ],
       "outputs": [
         RIGHT_SOILMASK
+      ]
+    },
+    {
+      # Make directory to store FIELDMOSAIC files
+      "command": "mkdir -p ${FIELDMOSAIC_DIR}",
+      "environment": {
+        "FIELDMOSAIC_DIR": FIELDMOSAIC_DIR
+      },
+      "inputs": [],
+      "outputs": [
+        FIELDMOSAIC_DIR
+      ]
+    },
+    {
+      # Create MOSAIC_LIST_FILE file from the soilmask files
+      "command": "ls ${SOILMASK_DIR}*.tif > ${MOSAIC_LIST_FILE}",
+      "environment": {
+        "SOILMASK_DIR": SOILMASK_DIR,
+        "MOSAIC_LIST_FILE": MOSAIC_LIST_FILE
+      },
+      "inputs": [
+        SOILMASK_DIR,
+        FIELDMOSAIC_DIR,
+        LEFT_SOILMASK,
+        RIGHT_SOILMASK
+      ],
+      "outputs": [
+        MOSAIC_LIST_FILE
       ]
     }
   ]

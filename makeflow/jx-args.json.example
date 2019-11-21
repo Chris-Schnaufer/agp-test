@@ -7,5 +7,6 @@
   "BETYDB_KEY": "9999999999999999999999999999999999999999",
   "CLEANED_META_DIR": "./output/cleaned_metadata/",
   "TIFS_DIR": "./output/tifs/",
-  "SOILMASK_DIR": "./output/soilmasks/"
+  "SOILMASK_DIR": "./output/soilmasks/",
+  "FIELDMOSAIC_DIR": "./output/fieldmosaic/"
 }
