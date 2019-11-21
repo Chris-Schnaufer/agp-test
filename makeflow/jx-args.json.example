@@ -6,5 +6,6 @@
   "BETYDB_URL": "https://terraref.ncsa.illinois.edu/bety/",
   "BETYDB_KEY": "9999999999999999999999999999999999999999",
   "CLEANED_META_DIR": "./output/cleaned_metadata/",
-  "TIFS_DIR": "./output/tifs/"
+  "TIFS_DIR": "./output/tifs/",
+  "SOILMASK_DIR": "./output/soilmasks/"
 }

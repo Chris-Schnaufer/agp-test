@@ -7,6 +7,8 @@
     "METADATA_CLEANED": CLEANED_META_DIR + UUID + "_metadata_cleaned.json",
     "LEFT_TIF": TIFS_DIR + UUID + "_left.tif",
     "RIGHT_TIF": TIFS_DIR + UUID + "_right.tif",
+    "LEFT_SOILMASK": SOILMASK_DIR + UUID + "_left_mask.tif",
+    "RIGHT_SOILMASK": SOILMASK_DIR + UUID + "_right_mask.tif"
   },
   "rules": [
     {
@@ -113,6 +115,51 @@
       ],
       "outputs": [
         RIGHT_TIF
+      ]
+    },
+    {
+      # Make directory to store SOILMASK files
+      "command": "mkdir -p ${SOILMASK_DIR}",
+      "environment": {
+        "SOILMASK_DIR": SOILMASK_DIR
+      },
+      "inputs": [],
+      "outputs": [
+        SOILMASK_DIR
+      ]
+    },
+    {
+      # Generate soil mask from LEFT TIFF image
+      "command": "docker run --rm -v $(pwd):/mnt -w /mnt agpipeline/soilmask:latest --result print --metadata ${METADATA} --working_space ${WORKING_SPACE} ${LEFT_TIF}",
+      "environment": {
+        "LEFT_TIF": LEFT_TIF,
+        "METADATA": METADATA_CLEANED,
+        "WORKING_SPACE": SOILMASK_DIR
+    },
+      "inputs": [
+        SOILMASK_DIR,
+        LEFT_TIF,
+        METADATA_CLEANED
+      ],
+      "outputs": [
+        LEFT_SOILMASK
+      ]
+    },
+    {
+      # Generate soil mask from RIGHT TIFF image
+      "command": "docker run --rm -v $(pwd):/mnt -w /mnt agpipeline/soilmask:latest --result print --metadata ${METADATA} --working_space ${WORKING_SPACE} ${RIGHT_TIF}",
+      "environment": {
+        "RIGHT_TIF": RIGHT_TIF,
+        "METADATA": METADATA_CLEANED,
+        "WORKING_SPACE": SOILMASK_DIR
+    },
+      "inputs": [
+        SOILMASK_DIR,
+        RIGHT_TIF,
+        METADATA_CLEANED
+      ],
+      "outputs": [
+        RIGHT_SOILMASK
       ]
     }
   ]
