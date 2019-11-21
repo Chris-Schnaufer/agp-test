@@ -2,4 +2,5 @@ raw_data/
 jx-args.json
 jx-args_*.json
 *.makeflowlog
-output/*
+/output/*
+/makeflow.failed.*/*
