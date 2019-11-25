@@ -214,6 +214,17 @@
         FIELDMOSAIC_DIR + "fullfield_mosaic_10pct.tif",
         FIELDMOSAIC_DIR + "fullfield_mosaic_thumb.tif"
       ]
+    },
+    {
+      # Make directory to store CANOPYCOVER result files
+      "command": "mkdir -p ${CANOPYCOVER_DIR}",
+      "environment": {
+        "CANOPYCOVER_DIR": CANOPYCOVER_DIR
+      },
+      "inputs": [],
+      "outputs": [
+        CANOPYCOVER_DIR
+      ]
     }
   ]
 }

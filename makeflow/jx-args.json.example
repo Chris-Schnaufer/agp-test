@@ -10,5 +10,6 @@
   "SOILMASK_DIR": "./output/soilmasks/",
   "FIELDMOSAIC_DIR": "./output/fieldmosaic/",
   "MOSAIC_BOUNDS": "-111.9750963 33.0764953 -111.9747967 33.074485715",
-  "SENSOR": "stereoTop"
+  "SENSOR": "stereoTop",
+  "CANOPYCOVER_DIR": "./output/canopycover/"
 }
