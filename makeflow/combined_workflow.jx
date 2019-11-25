@@ -190,6 +190,30 @@
       "outputs": [
         MOSAIC_LIST_FILE
       ]
+    },
+    {
+      # Generate field mosaic from soil mask TIFFs
+      "command": "docker run --rm -v $(pwd):/mnt -w /mnt agpipeline/fieldmosaic:latest --result print --metadata ${METADATA} --working_space ${WORKING_SPACE} ${MOSAIC_LIST_FILE} ${SENSOR} \"${MOSAIC_BOUNDS}\"",
+      "environment": {
+        "MOSAIC_LIST_FILE": MOSAIC_LIST_FILE,
+        "METADATA": METADATA_CLEANED,
+        "WORKING_SPACE": FIELDMOSAIC_DIR,
+        "SENSOR": SENSOR,
+        "MOSAIC_BOUNDS": MOSAIC_BOUNDS
+    },
+      "inputs": [
+        FIELDMOSAIC_DIR,
+        MOSAIC_LIST_FILE,
+        METADATA_CLEANED
+      ],
+      "outputs": [
+        FIELDMOSAIC_DIR + "fullfield_mosaic.png",
+        FIELDMOSAIC_DIR + "fullfield_mosaic.png.aux.xml",
+        FIELDMOSAIC_DIR + "fullfield_mosaic.tif",
+        FIELDMOSAIC_DIR + "fullfield_mosaic.vrt",
+        FIELDMOSAIC_DIR + "fullfield_mosaic_10pct.tif",
+        FIELDMOSAIC_DIR + "fullfield_mosaic_thumb.tif"
+      ]
     }
   ]
 }

@@ -8,5 +8,7 @@
   "CLEANED_META_DIR": "./output/cleaned_metadata/",
   "TIFS_DIR": "./output/tifs/",
   "SOILMASK_DIR": "./output/soilmasks/",
-  "FIELDMOSAIC_DIR": "./output/fieldmosaic/"
+  "FIELDMOSAIC_DIR": "./output/fieldmosaic/",
+  "MOSAIC_BOUNDS": "-111.9750963 33.0764953 -111.9747967 33.074485715",
+  "SENSOR": "stereoTop"
 }
